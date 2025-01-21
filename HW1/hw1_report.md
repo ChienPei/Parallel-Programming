@@ -1,7 +1,5 @@
 # 1. Title & Identification
    - **Title**: Homework 1 - Odd-Even Sort Implementation
-   - **Author**: 簡佩如
-   - **Student ID**: 112065525
 
 # 2. Implementation
 ## 2.1 How do you handle an arbitrary number of input items and processes? 
@@ -25,7 +23,7 @@
 在測量程式執行效能時，我透過 Nsight Systems 以及 MPI 函式進行資料收集和計算，具體方法如下：
 1. **使用 Nsight Systems 進行資料收集**：  
    針對每個執行 Rank，使用 Nsight Systems 擷取 `MPI event summary`，記錄了 I/O time（包含 *MPI_File_open*、*MPI_File_write_at*、*MPI_File_read_at*）以及 communication time（*MPI_Sendrecv*），我保留所有rank的這些資訊，以便後續分析，其圖表示意圖如下：
-   ![image](https://github.com/ChienPei/Parallel-Programming-HW1/blob/main/pictures/nsys_example.png?raw=true)
+   ![image](https://github.com/ChienPei/Parallel-Programming/blob/main/HW1/pictures/nsys_example.png?raw=true)
 
 2. **計算程式的總執行時間**：  
    透過 `MPI_Wtime()` 函數來計算程式的總執行時間，並將該時間記錄到相應的 `.txt` 文件中。同時定義計算時間為：  
@@ -110,7 +108,7 @@ Explain the test data and its sizes you've chosen.
 ### 3.2.3 Analysis of Results:
 ### 單一節點上不同資料量對 1 至 12 個進程的效能分析
 #### (a) 在單一個 node 上，觀察從 1 到 12 個 process 的表現: n = 100
-![image](https://github.com/ChienPei/Parallel-Programming-HW1/blob/main/pictures/1_node_100n.png?raw=true)
+![image](https://github.com/ChienPei/Parallel-Programming/blob/main/HW1/pictures/1_node_100n.png?raw=true)
 
 #### Analysis of Results：
 1. **左圖：時間分佈（Time Profile）**
@@ -130,7 +128,7 @@ Explain the test data and its sizes you've chosen.
     - 在小資料集下不建議增加過多的 process，因為效能瓶頸主要來自 MPI 管理開銷和較少的通訊需求，增加 process 數量無法帶來實質的效能提升。在這樣的情況下，建議將 process 控制在 2 至 4 個範圍內，避免因管理開銷過高而導致效能下降。
 
 #### (b) 在單一個 node 上，觀察從 1 到 12 個: n = 12345
-![image](https://github.com/ChienPei/Parallel-Programming-HW1/blob/main/pictures/1_node_12345n.png?raw=true)
+![image](https://github.com/ChienPei/Parallel-Programming/blob/main/HW1/pictures/1_node_12345n.png?raw=true)
 
 #### Analysis of Results：
 1. **時間分佈（Time Profile）**
@@ -148,7 +146,7 @@ Explain the test data and its sizes you've chosen.
     - 對於小資料量 \( n = 12345 \)，2-3 個 process 仍能帶來一定的效能提升，但更高的 process 數量可能導致管理和通訊開銷增多，反而拖累效能。
 
 #### (c) 在單一個 node 上，觀察從 1 到 12 個: n = 400009
-![image](https://github.com/ChienPei/Parallel-Programming-HW1/blob/main/pictures/1_node_400009n.png?raw=true)
+![image](https://github.com/ChienPei/Parallel-Programming/blob/main/HW1/pictures/1_node_400009n.png?raw=true)
 #### Analysis of Results：
 1. **時間分佈（Time Profile）**
    - 在 \( n = 400009 \) 大資料集下，隨著 process 數量增加，總執行時間在 2 至 3 個 process 時顯著減少，說明平行計算在此資料量下帶來了更明顯的效能提升。然而，在超過 4 個 process 後，執行時間開始增加，說明進一步增加 process 的效果有限。
@@ -167,7 +165,7 @@ Explain the test data and its sizes you've chosen.
     - 隨資料量進一步增大，通訊開銷可能成為更大的瓶頸。若資料量再增加，可以考慮更有效的通訊模式，看起來還可以再嘗試更大的資料集！
 
 #### (d) 在單一個 node 上，觀察從 1 到 12 個: n = 536869888
-![image](https://github.com/ChienPei/Parallel-Programming-HW1/blob/main/pictures/1_node_536869888n.png?raw=true)
+![image](https://github.com/ChienPei/Parallel-Programming/blob/main/HW1/pictures/1_node_536869888n.png?raw=true)
 
 #### Analysis of Results：
 1. **時間分佈（Time Profile）**
@@ -189,7 +187,7 @@ Explain the test data and its sizes you've chosen.
 
 ### 固定 12個 process 不同資料量對 1 至 8 個 node 的效能分析
 #### (a) 12 個 process 在不同 node 下的表現： n = 100
-![image](https://github.com/ChienPei/Parallel-Programming-HW1/blob/main/pictures/12_node_100n.png?raw=true)
+![image](https://github.com/ChienPei/Parallel-Programming/blob/main/HW1/pictures/12_node_100n.png?raw=true)
 #### Analysis of Results：
 1.  **Time Profile**：在 1 個節點的情況下，運行時間最短。當節點增加到 2 或更多時，運行時間增加。
 2. **Speedup Analysis**：速度提升呈現負增長，尤其是在 2 節點的情況下加速比降低至接近 0.2。
@@ -200,7 +198,7 @@ Explain the test data and its sizes you've chosen.
     - 在小資料量情況下，通訊開銷顯著影響性能，多節點部署反而降低了整體效能。由於通訊時間遠高於計算時間，導致加速比急劇下降，適合單節點運行來避免不必要的通訊成本。
 
 #### (b) 12 個 process 在不同 node 下的表現： n = 12345
-![image](https://github.com/ChienPei/Parallel-Programming-HW1/blob/main/pictures/12_node_12345n.png?raw=true)
+![image](https://github.com/ChienPei/Parallel-Programming/blob/main/HW1/pictures/12_node_12345n.png?raw=true)
 
 #### Analysis of Results：
 1. **Time Profile**：增加資料量至 12345 後，1 節點依然具有最佳性能。
@@ -213,7 +211,7 @@ Explain the test data and its sizes you've chosen.
     - 資料量增加至 12345 時，性能仍然受到通訊開銷的限制。多節點的加速比持續降低，顯示資料量不足以有效發揮平行計算的優勢。在這樣的資料量下保持較少的節點數，避免過多的通訊負擔。
 
 #### (c) 12 個 process 在不同 node 下的表現： n = 400009
-![image](https://github.com/ChienPei/Parallel-Programming-HW1/blob/main/pictures/12_node_400009n.png?raw=true)
+![image](https://github.com/ChienPei/Parallel-Programming/blob/main/HW1/pictures/12_node_400009n.png?raw=true)
 
 #### Analysis of Results：
 1. **Time Profile**：當資料量達到 400009 時，跨節點的通訊開銷仍舊無法被有效分攤，因此超過兩個節點都會變慢。
@@ -225,7 +223,7 @@ Explain the test data and its sizes you've chosen.
     - 中等資料量情況下，情況跟小資料差不多，還是不要有太多節點比較好。
 
 #### (d) 12 個 process 在不同 node 下的表現： n = 536869888
-![image](https://github.com/ChienPei/Parallel-Programming-HW1/blob/main/pictures/12_node_536869888n.png?raw=true)
+![image](https://github.com/ChienPei/Parallel-Programming/blob/main/HW1/pictures/12_node_536869888n.png?raw=true)
 
 #### Analysis of Results：
 1. **Time Profile**：在這樣大規模的資料量下，1 節點的計算時間最長，隨著節點數增加，IO 和通訊的開銷變得更加明顯，但總運行時間隨節點數的增加有所減少。

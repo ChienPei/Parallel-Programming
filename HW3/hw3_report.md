@@ -263,7 +263,7 @@ Device "NVIDIA GeForce GTX 1080 (0)"
 
 #### 3.2.1 Integer GOPS
 <!-- ![image.png](pics/blocking_factor_integer_GOPS.png) -->
-![image.png](https://github.com/ChienPei/Parallel-Programming-HW3/blob/main/pics/blocking_factor_integer_GOPS.png?raw=true)
+![image.png](https://github.com/ChienPei/Parallel-Programming/blob/main/HW3/pics/blocking_factor_integer_GOPS.png?raw=true)
 
 | Block Size | Integer GOPS | Inst Integer 總和 | 執行時間 (s) |
 |------------|--------------|--------------------|----------|
@@ -278,7 +278,7 @@ Device "NVIDIA GeForce GTX 1080 (0)"
 
 #### 3.2.2 Shared Memory Bandwidth
 <!-- ![image.png](pics/blocking_factor_shared_memory_bandwidth.png) -->
-![image.png](https://github.com/ChienPei/Parallel-Programming-HW3/blob/main/pics/blocking_factor_shared_memory_bandwidth.png?raw=true)
+![image.png](https://github.com/ChienPei/Parallel-Programming/blob/main/HW3/pics/blocking_factor_shared_memory_bandwidth.png?raw=true)
 
     
 | Block size | Shared Memory Bandwidth | Shared Load Bandwidth | Shared Store Bandwidth  |
@@ -293,7 +293,7 @@ Device "NVIDIA GeForce GTX 1080 (0)"
 
 #### 3.2.3 Global Memory Bandwidth
 <!-- ![image.png](pics/blocking_factor_global_memory_bandwidth.png) -->
-![image.png](https://github.com/ChienPei/Parallel-Programming-HW3/blob/main/pics/blocking_factor_global_memory_bandwidth.png?raw=true)
+![image.png](https://github.com/ChienPei/Parallel-Programming/blob/main/HW3/pics/blocking_factor_global_memory_bandwidth.png?raw=true)
 
 | Block size | Global Memory Bandwidth | Global Load Bandwidth | Global Store Bandwidth |
 | ---------- | ----------------------- | --------------------- | ---------------------- |
@@ -311,7 +311,7 @@ Device "NVIDIA GeForce GTX 1080 (0)"
 
 ### 3.3 Optimization (hw3-2)
 <!-- ![Optimization Comparison](pics/optimization.png) -->
-![image.png](https://github.com/ChienPei/Parallel-Programming-HW3/blob/main/pics/optimization.png?raw=true)
+![image.png](https://github.com/ChienPei/Parallel-Programming/blob/main/HW3/pics/optimization.png?raw=true)
 
 | 方法                     | 是否使用 |
 |-------------------------|---------|
@@ -338,7 +338,7 @@ Device "NVIDIA GeForce GTX 1080 (0)"
 
 ### 3.5 Time Distribution
 <!-- ![Time Distribution](pics/time_distribution.png) -->
-![image.png](https://github.com/ChienPei/Parallel-Programming-HW3/blob/main/pics/time_distribution.png?raw=true)
+![image.png](https://github.com/ChienPei/Parallel-Programming/blob/main/HW3/pics/time_distribution.png?raw=true)
 - **計算時間（Computing Time）**
 隨著資料量增加，計算時間呈線性增長。從最小的 `p11k1`（1.23 秒）到最大的 `p22k1`（9.34 秒），顯示計算效率主要受資料量的影響，這也表示程式的可擴展性還不錯。
 - **記憶體複製時間（Memory Copy Time）**
@@ -352,7 +352,7 @@ I/O 的耗時相對較多，從 `p11k1` 的 1.02 秒到 `p22k1` 的 3.42 秒，�
 
 ## 4. Experiment on AMD GPU
 <!-- ![AMD GPU Comparison](pics/experiment_on_AMD_GPU.png) -->
-![image.png](https://github.com/ChienPei/Parallel-Programming-HW3/blob/main/pics/experiment_on_AMD_GPU.png?raw=true)
+![image.png](https://github.com/ChienPei/Parallel-Programming/blob/main/HW3/pics/experiment_on_AMD_GPU.png?raw=true)
 
 - **計算時間（Computing Time）**
 從圖表中可以看出，對於小型測資 `c01.1`，NVIDIA GPU 在單 GPU 和多 GPU 模式下均顯示出極低的計算時間，這表現了其硬體在處理小資料量時的優勢。然而，隨著測資增大（例如 `c05.1` 和 `c07.1`），NVIDIA 的計算時間增長幅度顯著高於 AMD GPU。相較之下，AMD GPU 的計算時間雖然也隨資料量增加而增長，但其成長幅度較為平穩，顯示其在大規模資料處理上的潛力。 此外，多 GPU 模式在 NVIDIA 和 AMD 平台上均顯示出略高於單 GPU 的計算時間，這可能與多 GPU 間的同步成本有關，表示多 GPU 模式沒有在所有情況下帶來明顯效能提升，尤其是在需要頻繁同步的情境下。因此，針對大型資料量的計算，如果以穩定性為優先，AMD 單 GPU 可能是更好的選擇，而在小型資料集的情況下，NVIDIA GPU 具備更高效能。

@@ -7,7 +7,7 @@
 **(1) Matrix Blocking**  
 - 將 Q 分為 BR×BK 的區塊，每個 thread 負責部分載入資料。
 計算公式及對應的程式碼如下：
-![Attention Formula](https://github.com/ChienPei/Parallel-Programming-HW4/blob/main/pics/Implementation-math-1.png?raw=true)
+![Attention Formula](https://github.com/ChienPei/Parallel-Programming/blob/main/HW4/pics/Implementation-math-1.png?raw=true)
 
 ```cpp
 // 載入 Q 的分塊到 shared memory
@@ -27,7 +27,7 @@ for (int i = threadIdFlat; i < BR * BK; i += numThreadsPerTile) {
 - Q 的每一 row 與 K 的每一 column 相乘，形成 attention scores 。
 - 使用 scaling factors  避免 overflow，提升穩定性。
 計算公式及對應的程式碼如下：
-![Attention Formula](https://github.com/ChienPei/Parallel-Programming-HW4/blob/main/pics/Implementation-math-2.png?raw=true)
+![Attention Formula](https://github.com/ChienPei/Parallel-Programming/blob/main/HW4/pics/Implementation-math-2.png?raw=true)
 
 ```cpp
 // 計算 Q * K^T，並逐步累加
@@ -56,7 +56,7 @@ for (int i = 0; i < THREAD_ROWS; i++) {
 - `outAcc` 累積 softmax 分子，並乘上 V。
 - `rowSumExp[i]` 累積 softmax 分母。
 計算公式及對應的程式碼如下：
-![Attention Formula](https://github.com/ChienPei/Parallel-Programming-HW4/blob/main/pics/Implementation-math-3.png?raw=true)
+![Attention Formula](https://github.com/ChienPei/Parallel-Programming/blob/main/HW4/pics/Implementation-math-3.png?raw=true)
 
 ```cpp
 #pragma unroll
@@ -85,7 +85,7 @@ for (int i = 0; i < THREAD_ROWS; i++) {
 - 將 `outAcc` 除以計算完的 `rowSumExp` 得到 softmax 後的 Q * K^T * V 的最終答案。
 - 將最終結果寫回全域記憶體 O。
 計算公式及對應的程式碼如下：
-![Attention Formula](https://github.com/ChienPei/Parallel-Programming-HW4/blob/main/pics/Implementation-math-4.png?raw=true)
+![Attention Formula](https://github.com/ChienPei/Parallel-Programming/blob/main/HW4/pics/Implementation-math-4.png?raw=true)
 
 ```cpp
 // 將 outAcc 進行標準化並寫回全局記憶體
@@ -105,7 +105,7 @@ for (int i = 0; i < THREAD_ROWS; i++) {
 ## 1.b Explain how matrices Q, K, and V are divided into blocks and processed in parallel.
 - 我將 Q、K、V 分塊為 BR×BC 的區塊，使每個 CUDA block 能夠同時負責一部分的 row 與 column。這樣就可以在有限的 shared memory 空間中處理維度 d 的片段。
 下圖是具體的分配方式的示意圖：
-![Division](https://github.com/ChienPei/Parallel-Programming-HW4/blob/main/pics/Implementation-division-1.png?raw=true)
+![Division](https://github.com/ChienPei/Parallel-Programming/blob/main/HW4/pics/Implementation-division-1.png?raw=true)
 
 ---
 
@@ -257,7 +257,7 @@ Device "NVIDIA GeForce GTX 1080 (0)"
 | Bank Conflict          | 2.961 seconds      |
 | Unroll                 | 2.897 seconds      |
 
-![Optimization](https://github.com/ChienPei/Parallel-Programming-HW4/blob/main/pics/Optimization.png?raw=true)
+![Optimization](https://github.com/ChienPei/Parallel-Programming/blob/main/HW4/pics/Optimization.png?raw=true)
 
 我使用了縮小 block size、tiling、unroll、coalesced memory access、shared memory、handle bank conflict 和 cuda 2d alignment 這幾個優化方法。圖中列出 block size、tiling、unroll，可以發現確實有優化效果。這些優化技術共同將執行時間從 baseline 的 4.475 秒縮短至最佳的 2.897 秒，整體效能提升約 35%。
 

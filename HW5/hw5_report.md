@@ -18,13 +18,13 @@
             - `ucp_params.features` 則是設定啟用的功能，像是支援 `UCP_FEATURE_TAG` 或`UCP_FEATURE_WAKEUP`。
             - `request_size` 和 `request_init` 負責設定 request 的大小和初始化方式。
             - `ucp_context` 整合這些設定後，負責管理 UCP 的通訊資源，確保系統可以正常運行。
-            ![1.1](https://github.com/ChienPei/Parallel-Programming-HW5/blob/main/pics/1.1.png?raw=true)
+            ![1.1](https://github.com/ChienPei/Parallel-Programming/blob/main/HW5/pics/1.1.png?raw=true)
 
         **[src/ucp/api/ucp.h]**
         [permalink](https://github.com/NTHU-LSALAB/UCX-lsalab/blob/84e459e73df4f02aecd044c44e4584d88f4b9b0e/src/ucp/api/ucp.h#L2057-L2063)
         - `ucp_init` 會呼叫 `ucp_init_version`
             permalink：
-            ![1.2](https://github.com/ChienPei/Parallel-Programming-HW5/blob/main/pics/1.2.png?raw=true)
+            ![1.2](https://github.com/ChienPei/Parallel-Programming/blob/main/HW5/pics/1.2.png?raw=true)
 
         **[src/ucp/core/ucp_context.c]**
         [permalink](https://github.com/NTHU-LSALAB/UCX-lsalab/blob/84e459e73df4f02aecd044c44e4584d88f4b9b0e/src/ucp/core/ucp_context.c#L2123-L2212)
@@ -35,7 +35,7 @@
             4. 使用 `ucp_fill_config` 和 `ucp_fill_resources`，根據 `params` 和 `config` 設置`ucp_context` 所需的功能（例如 `UCP_FEATURE_TAG` 和 `UCP_FEATURE_WAKEUP`）、資源以及傳輸層。
             5. 如果配置中啟用了 `rcache`，則初始化記憶體 registration cache，否則將其設置為空。
             6. 為上下文生成一個  **UUID**，用來追蹤資源。
-            ![1.3](https://github.com/ChienPei/Parallel-Programming-HW5/blob/main/pics/1.3.png?raw=true)
+            ![1.3](https://github.com/ChienPei/Parallel-Programming/blob/main/HW5/pics/1.3.png?raw=true)
 
     - 1.2 `ucp_worker_create` : 如下圖，`ucp_worker_create` 是用來建立一個 UCP worker 的函數，負責初始化並設置 UCP 的核心工作單元，將 `ucp_context`、`ucp_params` 和 `ucp_worker` 整合起來，以下是具體步驟：
 
@@ -44,11 +44,11 @@
             1. 使用 `worker_params.field_mask` 指定初始化哪些參數，此處設定為多執行緒模式 (`UCS_THREAD_MODE_SINGLE`)，表示不需要額外的鎖定機制（mutex）。
             2. `UCP_WORKER_PARAM_FIELD_THREAD_MODE` 是用來告知 UCP 初始化 Worker 時需要設定 `thread_mode` 的 flag。
             3. 呼叫 `ucp_worker_create` 函數，根據 `ucp_context` 和 `worker_params` 初始化 Worker，並將結果存入 `ucp_worker` 指標。
-            ![1.4](https://github.com/ChienPei/Parallel-Programming-HW5/blob/main/pics/1.4.png?raw=true)
+            ![1.4](https://github.com/ChienPei/Parallel-Programming/blob/main/HW5/pics/1.4.png?raw=true)
 
         **[src/ucp/api/ucp.h]**
         [permalink](https://github.com/NTHU-LSALAB/UCX-lsalab/blob/84e459e73df4f02aecd044c44e4584d88f4b9b0e/src/ucp/api/ucp.h#L2140-L2142)
-            ![1.5](https://github.com/ChienPei/Parallel-Programming-HW5/blob/main/pics/1.5.png?raw=true)
+            ![1.5](https://github.com/ChienPei/Parallel-Programming/blob/main/HW5/pics/1.5.png?raw=true)
 
         **[src/ucp/core/ucp_worker.c]**
         [permalink](https://github.com/NTHU-LSALAB/UCX-lsalab/blob/84e459e73df4f02aecd044c44e4584d88f4b9b0e/src/ucp/core/ucp_worker.c#L2311-L2547)
@@ -58,7 +58,7 @@
             3. 初始化內部數據，包括`rkey_ptr_reqs`、 `internal_eps`、 `stream_ready_eps`  、`rkey_config_hash`和`discard_uct_ep_hash` 等。
             4. 呼叫 `ucp_worker_keepalive_reset`，初始化 Worker 的`keepalive` 機制，確保 Worker 能夠正常運行。
             5. 成功初始化後，將指向 Worker 的指標存入 `worker_p`，以供後續使用。
-            ![1.6](https://github.com/ChienPei/Parallel-Programming-HW5/blob/main/pics/1.6.png?raw=true)
+            ![1.6](https://github.com/ChienPei/Parallel-Programming/blob/main/HW5/pics/1.6.png?raw=true)
 
     - 1.3  `ucp_ep_create`：如下圖，`ucp_ep_create` 的功能是建立通訊端點（endpoint），並使用這個端點來實現資料傳輸。具體而言，它依賴 `ucp_worker` 作為 local 的通訊資源，並透過指定遠端的地址（`peer_addr`）來與另一個 `ucp_worker` 連接。此外，可以透過 `ep_params` 設定錯誤處理模式。而創建成功的 endpoint 將存儲在輸出的指標 `ep_p` 中。
         
@@ -74,17 +74,17 @@
         [permalink](https://github.com/NTHU-LSALAB/UCX-lsalab/blob/84e459e73df4f02aecd044c44e4584d88f4b9b0e/examples/ucp_hello_world.c#L240-L252)
             - 設定 `ep_params` 配置，使用 `field_mask` 指定有效的參數（如 `REMOTE_ADDRESS`、`ERR_HANDLING_MODE`、`ERR_HANDLER` 等）。設定通訊目標`address`、`err_mode` 以及 `err_handler.cb`。
             - 呼叫 `ucp_ep_create` ，將 `ucp_worker` 與`ep_params`結合，創建一個 Endpoint，並將結果存入對應的 Endpoint 指標（例如 `client_ep` 或 `server_ep`）。
-            ![1.7](https://github.com/ChienPei/Parallel-Programming-HW5/blob/main/pics/1.7.png?raw=true)
-            ![1.8](https://github.com/ChienPei/Parallel-Programming-HW5/blob/main/pics/1.8.png?raw=true)
+            ![1.7](https://github.com/ChienPei/Parallel-Programming/blob/main/HW5/pics/1.7.png?raw=true)
+            ![1.8](https://github.com/ChienPei/Parallel-Programming/blob/main/HW5/pics/1.8.png?raw=true)
 
         **[src/ucp/api/ucp.h]**
         [permalink](https://github.com/NTHU-LSALAB/UCX-lsalab/blob/84e459e73df4f02aecd044c44e4584d88f4b9b0e/src/ucp/api/ucp.h#L2575-L2576)
-            ![1.9](https://github.com/ChienPei/Parallel-Programming-HW5/blob/main/pics/1.9.png?raw=true)
+            ![1.9](https://github.com/ChienPei/Parallel-Programming/blob/main/HW5/pics/1.9.png?raw=true)
 
         **[src/ucp/core/ucp_ep.c]**
         [permalink](https://github.com/NTHU-LSALAB/UCX-lsalab/blob/84e459e73df4f02aecd044c44e4584d88f4b9b0e/src/ucp/core/ucp_ep.c#L1176-L1216)
             - `ucp_ep_create` 是 UCP 中用於創建 Endpoint 的核心函數，Endpoint 是 UCP 通訊模型中負責處理與遠端通訊的 entity。`ucp_ep_create` 會根據輸入參數進行設定，其中 `worker` 是提供通訊資源的 context，負責管理整個 Endpoint 的基礎操作；`params` 包含創建 Endpoint 的詳細設定資訊，包括 `flags`（指定特殊模式，例如 Client-Server 模式）和 `field_mask`（指定有效字段，例如 `REMOTE_ADDRESS`、`ERR_HANDLING_MODE` 或 `NAME`），以及其他選填屬性如遠端 `address` 、`err_mode`和 `name`；最後，創建成功的 Endpoint 將存儲在輸出的指標 `ep_p` 中，供後續的通訊操作使用。
-            ![1.10](https://github.com/ChienPei/Parallel-Programming-HW5/blob/main/pics/1.10.png?raw=true)
+            ![1.10](https://github.com/ChienPei/Parallel-Programming/blob/main/HW5/pics/1.10.png?raw=true)
 
 
 2. UCX abstracts communication into three layers as below. Please provide a diagram illustrating the architectural design of UCX.
@@ -98,24 +98,24 @@
         
         **[src/ucp/core/ucp_context.h]**
         [permalink](https://github.com/NTHU-LSALAB/UCX-lsalab/blob/84e459e73df4f02aecd044c44e4584d88f4b9b0e/src/ucp/core/ucp_context.h#L267-L384)
-        ![1.11](https://github.com/ChienPei/Parallel-Programming-HW5/blob/main/pics/1.11.png?raw=true)
+        ![1.11](https://github.com/ChienPei/Parallel-Programming/blob/main/HW5/pics/1.11.png?raw=true)
 
     - 2.2 ucp_worker
         - `ucp_worker_t` 在 UCX 中負責執行通訊操作，對應到一個特定的 thread 或邏輯處理環境。它會根據 `ucp_context_t`，負責管理和操作通訊資源，例如 `ucp_ep`（Endpoint）。一個 UCX 應用可以擁有多個 `ucp_worker`，每個 `worker` 可以與不同的 thread 或硬體資源綁定。
         
         **[src/ucp/core/ucp_worker.h]**
         [permalink](https://github.com/NTHU-LSALAB/UCX-lsalab/blob/84e459e73df4f02aecd044c44e4584d88f4b9b0e/src/ucp/core/ucp_worker.h#L266-L360)
-        ![1.12](https://github.com/ChienPei/Parallel-Programming-HW5/blob/main/pics/1.12.png?raw=true)
+        ![1.12](https://github.com/ChienPei/Parallel-Programming/blob/main/HW5/pics/1.12.png?raw=true)
 
     - 2.3 ucp_ep
         - `ucp_ep_t` 是 UCX 中的 **Endpoint** 結構，代表一個與遠端 `ucp_worker` 的通訊連接。UCX 通訊模型中，所有的數據傳輸操作都會透過 `ucp_ep_t` 完成。也就是說，`ucp_ep_t` 負責維護與遠端節點之間的連接狀態，包括連接的`conn_sn`和`am_lane`。底層的數據傳輸透過 `uct_eps` 完成，每個 `uct_ep` 對應一條物理傳輸通道（例如 RDMA 或 SHM）。
         
         **[src/ucp/core/ucp_ep.h]**
         [permalink](https://github.com/NTHU-LSALAB/UCX-lsalab/blob/84e459e73df4f02aecd044c44e4584d88f4b9b0e/src/ucp/core/ucp_ep.h#L536-L582)
-        ![1.13](https://github.com/ChienPei/Parallel-Programming-HW5/blob/main/pics/1.13.png?raw=true)
+        ![1.13](https://github.com/ChienPei/Parallel-Programming/blob/main/HW5/pics/1.13.png?raw=true)
 
     - 2.4 執行結果：
-        ![1.14](https://github.com/ChienPei/Parallel-Programming-HW5/blob/main/pics/1.14.png?raw=true)
+        ![1.14](https://github.com/ChienPei/Parallel-Programming/blob/main/HW5/pics/1.14.png?raw=true)
 
         **A diagram illustrating the architectural design of UCX:**
 
@@ -167,15 +167,15 @@
     **[src/ucs/config/parser.c → ucs_config_parser_print_opts]** 
     [permalink](https://github.com/NTHU-LSALAB/UCX-lsalab/blob/84e459e73df4f02aecd044c44e4584d88f4b9b0e/src/ucs/config/types.h#L85-L94)
     在 **`src/ucs/config/types.h`** 的 ucs_config_print_flags_t 中加入 **`UCS_CONFIG_PRINT_TLS  = UCS_BIT(5)`**
-    ![2.1](https://github.com/ChienPei/Parallel-Programming-HW5/blob/main/pics/2.1.png?raw=true)
+    ![2.1](https://github.com/ChienPei/Parallel-Programming/blob/main/HW5/pics/2.1.png?raw=true)
 
     在 src/ucs/config/parser.c 的 ucs_config_parser_print_opts 印出 line 1 的資訊：
     [permalink](https://github.com/NTHU-LSALAB/UCX-lsalab/blob/84e459e73df4f02aecd044c44e4584d88f4b9b0e/src/ucs/config/parser.c#L1880-L1883)
-    ![2.2](https://github.com/ChienPei/Parallel-Programming-HW5/blob/main/pics/2.2.png?raw=true)
+    ![2.2](https://github.com/ChienPei/Parallel-Programming/blob/main/HW5/pics/2.2.png?raw=true)
 
     在 src/ucp/core/ucp_worker.c 的 ucp_worker_print_used_tls 印出 line 2 ，此外也呼叫 ucp_config_print 來印出 line 1 。
     [permalink](https://github.com/NTHU-LSALAB/UCX-lsalab/blob/84e459e73df4f02aecd044c44e4584d88f4b9b0e/src/ucp/core/ucp_worker.c#L1855-L1856)
-    ![2.3](https://github.com/ChienPei/Parallel-Programming-HW5/blob/main/pics/2.3.png?raw=true)
+    ![2.3](https://github.com/ChienPei/Parallel-Programming/blob/main/HW5/pics/2.3.png?raw=true)
 
 2. How do the functions in these files call each other? Why is it designed this way?
     以下是檔案之間的互動：
@@ -267,12 +267,12 @@ mpiucx -n 2 $HOME/UCX-lsalab/test/mpi/osu/pt2pt/osu_latency
 mpiucx -n 2 $HOME/UCX-lsalab/test/mpi/osu/pt2pt/osu_bw
 ```
 以下是執行的示意圖：
-![3.1](https://github.com/ChienPei/Parallel-Programming-HW5/blob/main/pics/3.1.png?raw=true)
-![3.2](https://github.com/ChienPei/Parallel-Programming-HW5/blob/main/pics/3.2.png?raw=true)
+![3.1](https://github.com/ChienPei/Parallel-Programming/blob/main/HW5/pics/3.1.png?raw=true)
+![3.2](https://github.com/ChienPei/Parallel-Programming/blob/main/HW5/pics/3.2.png?raw=true)
 
 2. Please create a chart to illustrate the impact of different parameter options on various data sizes and the effects of different testsuite.
-![3.3](https://github.com/ChienPei/Parallel-Programming-HW5/blob/main/pics/3.3.png?raw=true)
-![3.4](https://github.com/ChienPei/Parallel-Programming-HW5/blob/main/pics/3.4.png?raw=true)
+![3.3](https://github.com/ChienPei/Parallel-Programming/blob/main/HW5/pics/3.3.png?raw=true)
+![3.4](https://github.com/ChienPei/Parallel-Programming/blob/main/HW5/pics/3.4.png?raw=true)
 
 
 3. Based on the chart, explain the impact of different TLS implementations and hypothesize the possible reasons (references required).
